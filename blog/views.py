@@ -10,7 +10,16 @@ from .models import Post
 
 def postlist(request):
     posts = Post.objects.order_by('-created_on')
-    paginator = Paginator(posts, 5)
-    context = {'posts': posts,}
 
-    return render(request, template_name='index.html', context=context)
+    if request.method == 'GET' and 'search' in request.GET:
+        q = request.GET['search']
+        if q is not None and q != '':
+            posts = Post.objects.filter(title__contains=q)
+
+    paginator = Paginator(posts, 1)
+    page_number = request.GET.get('page')
+    page_posts = paginator.get_page(page_number)
+
+    
+
+    return render(request, 'index.html', {'posts': page_posts})

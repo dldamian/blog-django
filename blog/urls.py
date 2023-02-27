@@ -1,5 +1,6 @@
 from django.urls import path
+from .views import PostListView
 
 urlpatterns = [
-    #path('', admin.site.urls),
+    path('', PostListView.as_view()),
 ]

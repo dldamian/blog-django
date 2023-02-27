@@ -4,6 +4,14 @@ from django.utils.text import slugify
 
 class Category(models.Model):
     title = models.CharField(max_length=100, unique=True, blank=True)
+    slug = models.SlugField(max_length=200, unique=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.title, allow_unicode=False)
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return self.title
 
     class Meta:
         verbose_name_plural = 'Categories'
@@ -11,10 +19,11 @@ class Category(models.Model):
 
 class Post(models.Model):
     title = models.CharField(max_length=200, unique=True)
-    slug = models.SlugField(max_length=200, unique=True)
+    slug = models.SlugField(max_length=200, unique=True, blank=True)
     author = models.ForeignKey(User, on_delete= models.CASCADE)
     updated_on = models.DateTimeField(auto_now=True)
-    content = models.TextField()
+    summary = models.TextField(max_length=250, default='')
+    content = models.TextField(blank=True, null=True)
     created_on = models.DateTimeField(auto_now_add=True)
     likes = models.ManyToManyField(User, blank=True, related_name='post_likes')
     image = models.ImageField(null=True, blank=True, upload_to='images/')

@@ -16,7 +16,7 @@ def postlist(request):
         if q is not None and q != '':
             posts = Post.objects.filter(title__contains=q)
 
-    paginator = Paginator(posts, 1)
+    paginator = Paginator(posts, 5)
     page_number = request.GET.get('page')
     page_posts = paginator.get_page(page_number)
 

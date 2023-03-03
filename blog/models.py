@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.text import slugify
+from ckeditor.fields import RichTextField
 
 class Category(models.Model):
     title = models.CharField(max_length=100, unique=True, blank=True)
@@ -23,11 +24,12 @@ class Post(models.Model):
     author = models.ForeignKey(User, on_delete= models.CASCADE)
     updated_on = models.DateTimeField(auto_now=True)
     summary = models.TextField(max_length=250, default='')
-    content = models.TextField(blank=True, null=True)
+    content = RichTextField(blank=True, null=True)
     created_on = models.DateTimeField(auto_now_add=True)
     likes = models.ManyToManyField(User, blank=True, related_name='post_likes')
     image = models.ImageField(null=True, blank=True, upload_to='images/')
     category = models.ManyToManyField(Category, blank=True, related_name='post_categories')
+    featured = models.BooleanField(blank=True, null=True, default=False)
 
     class Meta:
         ordering = ['-created_on']
